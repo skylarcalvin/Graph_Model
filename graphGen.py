@@ -19,8 +19,10 @@ class networkGraph:
     Class attributes:
         nodes: the number of nodes in the dictionary.
         networkGraph: is a default dictionary containing nodes, and possible next hops.
+        hops: a dictionary of capacity values per start and destination tuple.
         routes: is a default dictionary containing all possible graph routes for each starting and destination node.
         longestRoutes: A list of lists containing the longest routes in the network.
+        widestRoutes: A default dictionary containing the widest route per start, destination pair.
     '''
 
     def __init__(self, nodes: int = 7):
@@ -30,20 +32,26 @@ class networkGraph:
 
         self.nodes = nodes # Default to 7
         self.networkGraph = dd(list)
+        self.caps = dict()
         self.routes = dd(list)
         self.longestRoutes = list()
+        self.widestRoutes = dd(list)
 
-    def addHop (self, x: int, y: int):
+    def addHop (self, x: int, y: int, cap: int = 0):
         '''
         Function adds a hop to the network.
 
         Let:
-            "x" be defined as the current node where you are, and,
-            "y" be defined as the node you are going to.
+            x: defined as the current node where you are.
+            y: defined as the node you are going to.
+            cap: the capacity of the hop.
         '''
 
         # Add the destination to the list in the starting point's value.
         self.networkGraph[x].append(y)
+        
+        # add a capacity entry into the hops dictionary.
+        self.caps[(x, y)] = cap
 
     def routeInit(self, x: int, y: int):
         '''
@@ -52,8 +60,8 @@ class networkGraph:
 
         Let:
 
-            x be the starting node, and,
-            y by the destination node.
+            x: the starting node, and,
+            y: the destination node.
         '''
 
         self.routes[(x, y)] = []
@@ -73,9 +81,9 @@ class networkGraph:
 
         Let:
 
-            x: be the starting node,
-            y: be the destination node,
-            visited: be a dictionary of all nodes, containing whether the node is being visited or not (True/False), and,
+            x: The starting node,
+            y: The destination node,
+            visited: A dictionary of all nodes, containing whether the node is being visited or not (True/False), and,
             route: be the list of all nodes visited along the way to the destination.
         '''
 
@@ -149,8 +157,8 @@ class networkGraph:
 
         Let:
 
-            x be the starting node, and,
-            y by the destination node.
+            x: The starting node, and,
+            y: The destination node.
         '''
 
         # Itintialize an empty route for the starting and destination nodes.
@@ -182,7 +190,7 @@ class networkGraph:
             # And delete them from the routes dictionary.
             del(self.routes[k])
 
-    def findLongestRoute(self):
+    def findLongestRoutes(self):
         '''
         Function finds and returns the longest routes in the network. In case of a tie for longest, the
             function's output is appended to the longestROutes class attribute, which is a list.
@@ -214,4 +222,53 @@ class networkGraph:
                 
                 # Append it to the longestRoutes class attirbute.
                 self.longestRoutes.append(routes[i])    
+
+    def findWidestRoute (self, x: int, y: int):
+        '''
+        Function finds the widest route for a given starting and destination node in a network.
+
+        Let:
+
+            x: The starting node, and,
+            y: The destination node.
+        '''
+        
+        # Check if the starting and destination nodes exist in the routes.
+        if (x, y) in self.routes:
+
+            # If so, save the given route list to a local variable.
+            routes = self.routes[(x, y)]
+            
+            # Initialize an empty dictionary for the hop capacities.
+            caps = {}
+
+            # Loop through the roots.
+            for r in routes:
+
+                # Initialize a dictionary per route for the hop capacities.
+                routeCaps = {}
+
+                # Loop through the indexes of the root list:
+                for i in range(len(r)):
+
+                    # And check if the index plus one is out of bounds of the list indexes.
+                    if i + 1 <= len(r) - 1:
+
+                        # Save the current and next nodes in the hop as a tuple.
+                        tup = (r[i], r[i + 1])
+
+                        # Add to the capacities for the route for the hop by looking the capacity up in the class attribute containing hop capacities.
+                        routeCaps[tup] = self.caps[tup]
+
+                # Identify the route's bottleneck by taking the minimum capacity from the values in the routeCap dictionary.
+                routeBottleneck = min(routeCaps.values())
+
+                # Now, convert the route list into a tuple so it can be added to the bottleneck dictionary for the start and destination points.
+                caps[tuple(r)] = routeBottleneck
+
+            # Get the widest route for the start and destination nodes by getting the key of the maximum value of the bottleneck dictionary.
+            widestRoute = max(caps, key = caps.get)
+
+            # Finally update the widestRoutes class attribute with the route that was found.
+            self.widestRoutes[(x,y)] = list(widestRoute)
 
