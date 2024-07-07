@@ -17,9 +17,8 @@ class networkGraph:
         route: all of the nodes along the way from the starting and destination nodes.
     
     Class parameters:
-
         nodes: The number of vertices or nodes that the network will have.
-        
+
     Class attributes:
         nodes: the number of nodes in the dictionary.
         networkGraph: is a default dictionary containing nodes, and possible next hops.
