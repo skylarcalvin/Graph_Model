@@ -1,7 +1,7 @@
 # Author Skylar Calvin
 # Date 07/07/2024
 
-# For this I will be using two default dictionaries, which allow you to initialize at object as
+# For this I will be using three default dictionaries, which allow you to initialize at object as
 #   a new key's value if unspecified.
 from collections import defaultdict as dd
 
