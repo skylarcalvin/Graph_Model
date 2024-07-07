@@ -10,12 +10,16 @@ class networkGraph:
     '''
     Class models a network (or graph) of nodes or destinations.
 
-    Naming convention used:
+    Nomenclature used:
         network: the graph as a whole.
         node: a vertice in the graph.
         hop: an edge in the graph.
         route: all of the nodes along the way from the starting and destination nodes.
     
+    Class parameters:
+
+        nodes: The number of vertices or nodes that the network will have.
+        
     Class attributes:
         nodes: the number of nodes in the dictionary.
         networkGraph: is a default dictionary containing nodes, and possible next hops.
@@ -25,12 +29,12 @@ class networkGraph:
         widestRoutes: A default dictionary containing the widest route per start, destination pair.
     '''
 
-    def __init__(self, nodes: int = 7):
+    def __init__(self, nodes: int):
         '''
         Constructor function sets the attibutes when the class initializes.
         '''
 
-        self.nodes = nodes # Default to 7
+        self.nodes = nodes
         self.networkGraph = dd(list)
         self.caps = dict()
         self.routes = dd(list)
@@ -39,7 +43,7 @@ class networkGraph:
 
     def addHop (self, x: int, y: int, cap: int = 0):
         '''
-        Function adds a hop to the network.
+        Method adds a hop to the network.
 
         Let:
             x: defined as the current node where you are.
@@ -55,7 +59,7 @@ class networkGraph:
 
     def routeInit(self, x: int, y: int):
         '''
-        Function initializes an empty route in the routes default dictionary
+        Method initializes an empty route in the routes default dictionary
             for the given starting and destination nodes.
 
         Let:
@@ -74,7 +78,7 @@ class networkGraph:
             route: list = list()
             ):
         '''
-        Wrapping function recursively finds all possible routes for the node in the in the network. 
+        Method recursively finds all possible routes for the node in the in the network. 
             We do this by saving the original starting point x to a local variable, and then defining 
             a new function to contain the recursive algorithm. By doing this, the original starting point 
             remains accessible through future iterations of recursion.
@@ -152,7 +156,7 @@ class networkGraph:
 
     def loadRoutes(self, x: int, y: int):
         '''
-        Function to traverse networkGraph, and discover all possible routes, 
+        Method to traverse networkGraph, and discover all possible routes, 
             using the findAllRoutes function.
 
         Let:
@@ -192,8 +196,8 @@ class networkGraph:
 
     def findLongestRoutes(self):
         '''
-        Function finds and returns the longest routes in the network. In case of a tie for longest, the
-            function's output is appended to the longestROutes class attribute, which is a list.
+        Method finds and returns the longest routes in the network. In case of a tie for longest, the
+            Method's output is appended to the longestROutes class attribute, which is a list.
         '''
 
         # Initialize emplty lists for the routes, and the rout liengths.
@@ -225,7 +229,7 @@ class networkGraph:
 
     def findWidestRoute (self, x: int, y: int):
         '''
-        Function finds the widest route for a given starting and destination node in a network.
+        Method finds the widest route for a given starting and destination node in a network.
 
         Let:
 
